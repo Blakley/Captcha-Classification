@@ -1,6 +1,5 @@
 # Captcha Classification
-A multi-class classification model using deep learning to classify captcha images into various categories. 
-
+A multi-class classification model, CNN-based, using deep learning to classify captcha images into various categories. 
 ---
 
 ### Summary Example
