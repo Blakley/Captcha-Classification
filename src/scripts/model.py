@@ -47,31 +47,36 @@ class Captcha():
 		================================
 	'''	
 	def create(self):
-		# create sequential model
-		self._model = models.Sequential()
+	    # create sequential model
+	    self._model = models.Sequential()
 
-		# add input layer
-		self._model.add(layers.Input(shape = self.shape))
+	    # add input layer
+	    self._model.add(layers.Input(shape=self.shape))
 
-		# add convolutional layers
-		self._model.add(layers.Conv2D(32, kernel_size=(3, 3), activation='relu'))
-		self._model.add(layers.MaxPooling2D(pool_size=(2, 2)))
-		
-		self._model.add(layers.Conv2D(64, kernel_size=(3, 3), activation='relu'))
-		self._model.add(layers.MaxPooling2D(pool_size=(2, 2)))
-		
-		self._model.add(layers.Conv2D(128, kernel_size=(3, 3), activation='relu'))
-		self._model.add(layers.MaxPooling2D(pool_size=(2, 2)))
+	    # add convolutional layers
+	    self._model.add(layers.Conv2D(32, kernel_size=(3, 3), activation='relu'))
+	    self._model.add(layers.MaxPooling2D(pool_size=(2, 2)))
+	    self._model.add(layers.Dropout(0.25))  # Add dropout layer with dropout rate of 0.25
 
-		# flatten layer
-		self._model.add(layers.Flatten())
+	    self._model.add(layers.Conv2D(64, kernel_size=(3, 3), activation='relu'))
+	    self._model.add(layers.MaxPooling2D(pool_size=(2, 2)))
+	    self._model.add(layers.Dropout(0.25))  # Add dropout layer with dropout rate of 0.25
 
-		# add dense layers : softmax activation for multi-class classification
-		self._model.add(layers.Dense(128, activation='relu'))
-		self._model.add(layers.Dense(len(self.classes), activation='softmax'))
+	    self._model.add(layers.Conv2D(128, kernel_size=(3, 3), activation='relu'))
+	    self._model.add(layers.MaxPooling2D(pool_size=(2, 2)))
+	    self._model.add(layers.Dropout(0.25))  # Add dropout layer with dropout rate of 0.25
 
-		# compile model next
-		self.compile()
+	    # flatten layer
+	    self._model.add(layers.Flatten())
+
+	    # add dense layers: softmax activation for multi-class classification
+	    self._model.add(layers.Dense(128, activation='relu'))
+	    self._model.add(layers.Dropout(0.5))  # Add dropout layer with dropout rate of 0.5
+	    self._model.add(layers.Dense(len(self.classes), activation='softmax'))
+
+	    # compile model next
+	    self.compile()
+
 
 	'''
 		================================
@@ -139,8 +144,8 @@ class Captcha():
 
 		# final evaluation metrics
 		self.loss, self.accuracy = self._model.evaluate(self.validation)
+		print(f'Model Accuracy: {self.accuracy}')
 
-		
 
 	'''
 		================================
