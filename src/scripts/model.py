@@ -15,13 +15,15 @@ import matplotlib.pyplot as plt
 # Captcha Classification Model
 class Captcha():
 	def __init__(self):
+		# initalize captcha multiclass classification model
 		pass
 
 
 	'''
-		================================
-
-		================================
+		===========================================
+		 Load the dataset and split it into 
+		 training and validation sets
+		===========================================
 	'''	
 	def setup(self):
 		# load dataset & split dataset
@@ -43,9 +45,9 @@ class Captcha():
 		
 
 	'''
-		================================
-		
-		================================
+		===========================================
+			Create the CNN model architecture
+		===========================================
 	'''	
 	def create(self):
 	    # create sequential model
@@ -80,9 +82,10 @@ class Captcha():
 
 
 	'''
-		================================
-		
-		================================
+		===========================================
+		 Compile the CNN model with optimizer, 
+		 loss function, and evaluation metrics
+		===========================================
 	'''	
 	def compile(self):
 		self._model.compile(
@@ -97,10 +100,11 @@ class Captcha():
 		# train model next
 		self.train()
 
+
 	'''
-		================================
-		
-		================================
+		===========================================
+		  Train the CNN model on the training set
+		===========================================
 	'''	
 	def train(self):
 		self.history = self._model.fit(
@@ -114,9 +118,10 @@ class Captcha():
 
 
 	'''
-		================================
-		
-		================================
+		===========================================
+		 Show training & validation accuracy/loss 
+		 and print final evaluation metrics
+		===========================================
 	'''	
 	def statistics(self):
 		# accuracy values recording during each epoch
@@ -149,9 +154,10 @@ class Captcha():
 
 
 	'''
-		================================
-		
-		================================
+		===========================================
+		 Make predictions on a subset of 
+		 validation data and display the results
+		===========================================
 	'''	
 	def predictions(self):
 		# iterate over a few images
@@ -171,9 +177,14 @@ class Captcha():
 
 
 	'''
-		================================
+		===========================================
+		 Display a single image with true 
+		 and predicted labels.
 		
-		================================
+		 @param image: current image
+		 @param true_label: actual label
+		 @param prediction_label: predicted label
+		===========================================
 	'''	
 	def display_prediction(self, image, true_label, predicted_label):
 	    plt.figure()
@@ -183,20 +194,19 @@ class Captcha():
 	    plt.show()
 
 
-
 	'''
-		================================
-		
-		================================
+		===========================================
+				Save the trained model
+		===========================================
 	'''	
 	def save(self):
 		save_model(self._model, "../models/my_model.keras")
 		
 
 	'''
-		================================
-		
-		================================
+		===========================================
+		    	Load a pre-trained model
+		===========================================
 	'''	
 	def load(self):
 		self._model = load_model("../models/my_model.keras")
@@ -218,5 +228,5 @@ if __name__ == '__main__':
 	# load the model
 	_model.load()
 
-	# 
+	# view model predictions
 	_model.predictions()
