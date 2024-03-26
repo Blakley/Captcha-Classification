@@ -6,6 +6,8 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers, models
+from tensorflow.keras.models import save_model
+from tensorflow.keras.models import load_model
 
 import matplotlib.pyplot as plt
 
@@ -38,8 +40,6 @@ class Captcha():
 		# define RGB image sizes
 		self.shape = (128, 128, 3)
 		
-		# create model next
-		self.create()
 
 	'''
 		================================
@@ -56,22 +56,22 @@ class Captcha():
 	    # add convolutional layers
 	    self._model.add(layers.Conv2D(32, kernel_size=(3, 3), activation='relu'))
 	    self._model.add(layers.MaxPooling2D(pool_size=(2, 2)))
-	    self._model.add(layers.Dropout(0.25))  # Add dropout layer with dropout rate of 0.25
+	    self._model.add(layers.Dropout(0.2))  # Add dropout layer with dropout rate of 0.2
 
 	    self._model.add(layers.Conv2D(64, kernel_size=(3, 3), activation='relu'))
 	    self._model.add(layers.MaxPooling2D(pool_size=(2, 2)))
-	    self._model.add(layers.Dropout(0.25))  # Add dropout layer with dropout rate of 0.25
+	    self._model.add(layers.Dropout(0.2))  # Add dropout layer with dropout rate of 0.2
 
 	    self._model.add(layers.Conv2D(128, kernel_size=(3, 3), activation='relu'))
 	    self._model.add(layers.MaxPooling2D(pool_size=(2, 2)))
-	    self._model.add(layers.Dropout(0.25))  # Add dropout layer with dropout rate of 0.25
+	    self._model.add(layers.Dropout(0.2))  # Add dropout layer with dropout rate of 0.2
 
 	    # flatten layer
 	    self._model.add(layers.Flatten())
 
 	    # add dense layers: softmax activation for multi-class classification
 	    self._model.add(layers.Dense(128, activation='relu'))
-	    self._model.add(layers.Dropout(0.5))  # Add dropout layer with dropout rate of 0.5
+	    self._model.add(layers.Dropout(0.4)) # Add dropout layer with dropout rate of 0.4
 	    self._model.add(layers.Dense(len(self.classes), activation='softmax'))
 
 	    # compile model next
@@ -91,8 +91,8 @@ class Captcha():
 		)
 
 		# view layers
-		# _model.summary()
-
+		print(self._model.summary())
+		
 		# train model next
 		self.train()
 
@@ -153,7 +153,8 @@ class Captcha():
 		================================
 	'''	
 	def save(self):
-		pass
+		save_model(self._model, "../models/my_model.keras")
+		
 
 	'''
 		================================
@@ -161,7 +162,8 @@ class Captcha():
 		================================
 	'''	
 	def load(self):
-		pass
+		self._model = load_model("../models/my_model.keras")
+		print(self._model.summary())
 
 
 # 
@@ -169,7 +171,12 @@ if __name__ == '__main__':
 	# model instance
 	_model = Captcha()
 
-	# model setup outline
+	# model setup/creation 
 	_model.setup()
+	# _model.create()
 
-	# 
+	# save the model
+	# _model.save()
+
+	# load the model
+	_model.load()
