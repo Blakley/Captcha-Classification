@@ -3,6 +3,7 @@ import os
 # suppress tensorflow messages
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers, models
@@ -152,6 +153,42 @@ class Captcha():
 		
 		================================
 	'''	
+	def predictions(self):
+		# iterate over a few images
+		count = 9
+		
+		for images, labels in self.validation.take(1):
+		    
+		    predicted_labels = np.argmax(self._model.predict(images), axis=-1)
+		    
+		    for i in range(count):
+		        image = images[i].numpy()
+
+		        true_label = self.classes[labels[i].numpy()]
+		        predicted_label = self.classes[predicted_labels[i]]
+
+		        self.display_prediction(image, true_label, predicted_label)
+
+
+	'''
+		================================
+		
+		================================
+	'''	
+	def display_prediction(self, image, true_label, predicted_label):
+	    plt.figure()
+	    plt.imshow(image.astype('uint8'))
+	    plt.title(f"True Label: {true_label}, Predicted Label: {predicted_label}")
+	    plt.axis('off')
+	    plt.show()
+
+
+
+	'''
+		================================
+		
+		================================
+	'''	
 	def save(self):
 		save_model(self._model, "../models/my_model.keras")
 		
@@ -180,3 +217,6 @@ if __name__ == '__main__':
 
 	# load the model
 	_model.load()
+
+	# 
+	_model.predictions()
