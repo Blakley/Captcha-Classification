@@ -7,6 +7,8 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers, models
 
+import matplotlib.pyplot as plt
+
 # Captcha Classification Model
 class Captcha():
 	def __init__(self):
@@ -20,7 +22,7 @@ class Captcha():
 	'''	
 	def setup(self):
 		# load dataset & split dataset
-		self.train, self.validation = keras.utils.image_dataset_from_directory (
+		self.training, self.validation = keras.utils.image_dataset_from_directory (
 			"../dataset",
 		    subset = "both",
 		    seed = 8888,
@@ -30,7 +32,7 @@ class Captcha():
 		    validation_split = 0.2,
 		)
 
-		self.classes = self.train.class_names
+		self.classes = self.training.class_names
 		# print(self.classes)
 
 		# define RGB image sizes
@@ -77,11 +79,14 @@ class Captcha():
 		================================
 	'''	
 	def compile(self):
-		model.compile(
+		self._model.compile(
 			optimizer='adam', 
 			loss='sparse_categorical_crossentropy', 
 			metrics=['accuracy']
 		)
+
+		# view layers
+		# _model.summary()
 
 		# train model next
 		self.train()
@@ -92,11 +97,14 @@ class Captcha():
 		================================
 	'''	
 	def train(self):
-		self.history = model.fit(
-			self.train, 
+		self.history = self._model.fit(
+			self.training, 
 			validation_data = self.validation, 
 			epochs = 10
 		)
+
+		# 
+		self.statistics()
 
 
 	'''
@@ -105,7 +113,34 @@ class Captcha():
 		================================
 	'''	
 	def statistics(self):
-		pass
+		# accuracy values recording during each epoch
+		accuracy = self.history.history['accuracy']
+		validation_accuracy = self.history.history['val_accuracy']
+
+		loss = self.history.history['loss']
+		validation_loss = self.history.history['val_loss']
+
+		# visual accuracy and loss during each epoch
+		epochs_range = range(10)
+
+		plt.figure(figsize=(8, 8))
+		plt.subplot(1, 2, 1)
+		plt.plot(epochs_range, accuracy, label='Training Accuracy')
+		plt.plot(epochs_range, validation_accuracy, label='Validation Accuracy')
+		plt.legend(loc='lower right')
+		plt.title('Training and Validation Accuracy')
+	
+		plt.subplot(1, 2, 2)
+		plt.plot(epochs_range, loss, label='Training Loss')
+		plt.plot(epochs_range, validation_loss, label='Validation Loss')
+		plt.legend(loc='upper right')
+		plt.title('Training and Validation Loss')
+		plt.show()
+
+		# final evaluation metrics
+		self.loss, self.accuracy = self._model.evaluate(self.validation)
+
+		
 
 	'''
 		================================
